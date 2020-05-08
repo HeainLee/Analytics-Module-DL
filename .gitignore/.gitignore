@@ -1,0 +1,13 @@
+.idea
+/API/migrations
+
+# 로컬 개발 관련 폴더
+/result
+/_sample_data
+/LightGBM
+
+# 디폴트 스크립트
+
+# 파이썬 .pyc파일
+*/__pycache__/
+*.pyc
