@@ -28,5 +28,6 @@ celerybeat.pid
 /result
 /LightGBM
 
-# 디폴트 스크립트
-
+# 시크릿 스크립트
+/dasolution/settings.py
+/dasolution/config
