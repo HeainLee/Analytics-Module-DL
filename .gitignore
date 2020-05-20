@@ -30,4 +30,5 @@ celerybeat.pid
 
 # 시크릿 스크립트
 /dasolution/settings.py
+/dasolution/production.py
 /dasolution/config

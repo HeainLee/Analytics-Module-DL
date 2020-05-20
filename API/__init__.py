@@ -1,21 +1,37 @@
-from .config.result_path_config import PATH_CONFIG
+from API.config.result_path_config import PATH_CONFIG
 import os
 
-
-if not os.path.exists(PATH_CONFIG.RESULT_BASE_DIRECTORY) or not os.path.isdir(PATH_CONFIG.RESULT_BASE_DIRECTORY) :
-    os.mkdir(PATH_CONFIG.RESULT_BASE_DIRECTORY)
-
-if not os.path.exists(PATH_CONFIG.ORIGINAL_DATA_DIRECTORY) or not os.path.isdir(PATH_CONFIG.ORIGINAL_DATA_DIRECTORY):
-    os.mkdir(PATH_CONFIG.ORIGINAL_DATA_DIRECTORY)
-
-if not os.path.exists(PATH_CONFIG.PREPROCESSED_DATA) or not os.path.isdir(PATH_CONFIG.PREPROCESSED_DATA):
-    os.mkdir(PATH_CONFIG.PREPROCESSED_DATA)
-
-if not os.path.exists(PATH_CONFIG.PREPROCESS_TRANSFORMER) or not os.path.isdir(PATH_CONFIG.PREPROCESS_TRANSFORMER):
-    os.mkdir(PATH_CONFIG.PREPROCESS_TRANSFORMER)
-
-if not os.path.exists(PATH_CONFIG.MODEL) or not os.path.isdir(PATH_CONFIG.MODEL):
-    os.mkdir(PATH_CONFIG.MODEL)
+if not os.path.exists(PATH_CONFIG.RESULT_BASE_DIR) or not os.path.isdir(PATH_CONFIG.RESULT_BASE_DIR) :
+    os.mkdir(PATH_CONFIG.RESULT_BASE_DIR)
 
 if not os.path.exists(PATH_CONFIG.LOG) or not os.path.isdir(PATH_CONFIG.LOG):
     os.mkdir(PATH_CONFIG.LOG)
+
+if not os.path.exists(PATH_CONFIG.RESULT_ML_DIR) or not os.path.isdir(PATH_CONFIG.RESULT_ML_DIR):
+    os.mkdir(PATH_CONFIG.RESULT_ML_DIR)
+
+if not os.path.exists(PATH_CONFIG.RESULT_DL_DIR) or not os.path.isdir(PATH_CONFIG.RESULT_DL_DIR):
+    os.mkdir(PATH_CONFIG.RESULT_DL_DIR)
+
+if not os.path.exists(PATH_CONFIG.RESULT_ML_ORIGINAL_DATA_DIR) or not os.path.isdir(PATH_CONFIG.RESULT_ML_ORIGINAL_DATA_DIR):
+    os.mkdir(PATH_CONFIG.RESULT_ML_ORIGINAL_DATA_DIR)
+
+if not os.path.exists(PATH_CONFIG.RESULT_ML_PREPROCESSED_DATA_DIR) or not os.path.isdir(PATH_CONFIG.RESULT_ML_PREPROCESSED_DATA_DIR):
+    os.mkdir(PATH_CONFIG.RESULT_ML_PREPROCESSED_DATA_DIR)
+
+if not os.path.exists(PATH_CONFIG.RESULT_ML_PREPROCESS_TRANS_DIR) or not os.path.isdir(PATH_CONFIG.RESULT_ML_PREPROCESS_TRANS_DIR):
+    os.mkdir(PATH_CONFIG.RESULT_ML_PREPROCESS_TRANS_DIR)
+
+if not os.path.exists(PATH_CONFIG.RESULT_ML_MODEL_DIR) or not os.path.isdir(PATH_CONFIG.RESULT_ML_MODEL_DIR):
+    os.mkdir(PATH_CONFIG.RESULT_ML_MODEL_DIR)
+
+if not os.path.exists(PATH_CONFIG.RESULT_DL_ORIGINAL_DATA_DIR) or not os.path.isdir(PATH_CONFIG.RESULT_DL_ORIGINAL_DATA_DIR):
+    os.mkdir(PATH_CONFIG.RESULT_DL_ORIGINAL_DATA_DIR)
+
+if not os.path.exists(PATH_CONFIG.RESULT_DL_MODEL_DIR) or not os.path.isdir(PATH_CONFIG.RESULT_DL_MODEL_DIR):
+    os.mkdir(PATH_CONFIG.RESULT_DL_MODEL_DIR)
+
+
+# python manage.py makemigrations API
+# python manage.py showmigrations API
+# python manage.py migrate API
