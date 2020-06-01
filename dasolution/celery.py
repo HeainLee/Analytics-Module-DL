@@ -34,18 +34,21 @@ if check_version:
     print('')
     print(f'[{filename}]  장고 celery.py 실행')
     full_cmd = ' '.join(check_version)
-    if 'production' in full_cmd:
+    if 'dasolution.production' in full_cmd:
         os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dasolution.production')
         print(f'[{filename}]  장고 환경을 "배포(production.py)" 버전으로 실행했습니다.')
-    elif 'settings' in full_cmd:
+    elif 'dasolution.settings' in full_cmd:
         os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dasolution.settings')
-        print(f'[{filename}]  장고 환경을 "로컬(settings.py)" 버전으로 실행했습니다.')
+        print(f'[{filename}]  장고 환경을 "기본(settings.py)" 버전으로 실행했습니다.')
+    elif 'dasolution.locals' in full_cmd:
+        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dasolution.locals')
+        print(f'[{filename}]  장고 환경을 "로컬(locals.py)" 버전으로 실행했습니다.')
     else:
         os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dasolution.settings')
-        print(f'[{filename}]  장고 환경을 명시하지 않았습니다. "로컬(settings.py)" 버전의 환경을 임포트합니다.')
+        print(f'[{filename}]  장고 환경을 명시하지 않았습니다. "기본(settings.py)" 버전의 환경을 임포트합니다.')
 else:
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dasolution.settings')
-    print(f'[{filename}]  manage.py 명령어가 실행되지 않았습니다. "로컬(settings.py)" 버전의 환경을 임포트합니다.')
+    print(f'[{filename}]  manage.py 명령어가 실행되지 않았습니다. "기본(settings.py)" 버전의 환경을 임포트합니다.')
 
 # os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dasolution.settings')
 # os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dasolution.production')
