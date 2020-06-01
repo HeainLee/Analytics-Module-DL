@@ -207,14 +207,14 @@ class PreprocessTask(PreprocessorBase):
                                   "original_classes":None, "encoded_classes":None})
     """
 
-    def __init__(self):
-        self.pk = None
+    def __init__(self, pk):
+        self.pk = pk
         self.func_query = None
         self.file_path = None
         self.file_name = None
         self.real_final_list = []
 
-    # 전처리된 데이터를(pandas.DataFrame)을 json을 변환하여 저장하는 함수
+    # 전처리된 데이터를(pandas.DataFrame)을 저장하는 함수(원본데이터 확장자에 따름)
     def _save_prep_data(self, prep_data, file_name):
         """
         Save preprocessed Data as json
@@ -232,8 +232,15 @@ class PreprocessTask(PreprocessorBase):
                  (save 'prep_data' to PREPROCESSED_DATA_DIR)
                  (append new value to self.file_path)
         """
+        file_ext = os.path.splitext(file_name)[1]
         self.file_path = os.path.join(PREPROCESSED_DATA_DIR, file_name)
-        prep_data.to_json(self.file_path, orient="index")
+        if file_ext == ".json":
+            prep_data.to_json(self.file_path, orient="index")
+        elif file_ext == ".csv":
+            prep_data.to_csv(self.file_path, sep=',', header=True,
+                             index=False, encoding='utf-8')
+        else:
+            where_exception(e='전처리 데이터를 저장하지 못했습니다.')
 
     # TODO 전처리 방법의 동작방식에 따라 조건문
     def _train_data_transformer(self, data, field_name, processor):
@@ -443,7 +450,7 @@ class PreprocessTask(PreprocessorBase):
             self.real_final_list.append(info_dict)
         return data, save_n
 
-    def task_result(self, data_path, request_info, pk):
+    def task_result(self, data_path, request_info):
         """
         Preparation for calling `_task_drop_columns` and `_task_result`
         according to 'request_info' and saving preprocessed Data
@@ -462,12 +469,13 @@ class PreprocessTask(PreprocessorBase):
                  final_result (dict):
                  final return value of user's requested
         """
-        self.pk = pk
-        self.file_name = "P_{}.json".format(self.pk)
+        original_file_name = os.path.split(data_path)[1]
+        original_file_ext = os.path.splitext(original_file_name)[1][1:]
+        self.file_name = "P_{}.{}".format(self.pk, original_file_ext)
 
         user_request_dict = request_info["request_data"]
         data = super()._load_data(
-            base_path="ORIGINAL_DATA_DIR", file_name=os.path.split(data_path)[1]
+            base_path="ORIGINAL_DATA_DIR", file_name=original_file_name
         )
 
         save_N = 0
@@ -495,7 +503,7 @@ class PreprocessTask(PreprocessorBase):
                         data=data, request_dict=get_request_dict, save_n=save_N
                     )
             self._save_prep_data(prep_data=data, file_name=self.file_name)
-            data_summary = DataSummary(self.file_path)
+            data_summary = DataSummary(path=self.file_path)
 
             final_result = dict(
                 file_path=self.file_path,

@@ -60,8 +60,12 @@ class CallMixin:
                     get_data = pd.read_json(file_path, lines=True, encoding="utf-8")
             elif base_path == "PREPROCESSED_DATA_DIR":
                 base_path = PREPROCESSED_DATA_DIR
-                file_path = os.path.join(base_path, file_name)
-                get_data = pd.read_json(file_path, orient="index").sort_index()
+                if os.path.splitext(file_name)[1] == ".csv":
+                    file_path = os.path.join(base_path, file_name)
+                    get_data = pd.read_csv(file_path)
+                elif os.path.splitext(file_name)[1] == ".json":
+                    file_path = os.path.join(base_path, file_name)
+                    get_data = pd.read_json(file_path, orient="index").sort_index()
             return get_data
         except Exception as e:
             where_exception(error_msg=e)

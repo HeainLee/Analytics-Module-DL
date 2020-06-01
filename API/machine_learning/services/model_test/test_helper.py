@@ -50,6 +50,7 @@ class ModelPerformance(PreprocessorBase):
         self.model_train_command = literal_eval(model_info['COMMAND'])
         self.x_data = self.model_train_command['train_parameters']['X']
         self.y_data = self.model_train_command['train_parameters']['y']
+        self.y_data_transformer = None
         # self.model_session = model_session
 
     # Train Data와 동일한 변환기로 Test Data에 전처리를 수행하는 함수
@@ -73,6 +74,10 @@ class ModelPerformance(PreprocessorBase):
                     transformer = super()._load_pickle(
                         base_path="PREPROCESS_TRANSFORMER_DIR", file_name=file_name
                     )
+
+                    if field_name == self.y_data:
+                        self.y_data_transformer = transformer
+
                     changed_field = transformer.transform(
                         data_set[field_name].values.reshape(-1, 1)
                     )
@@ -134,12 +139,24 @@ class ModelPerformance(PreprocessorBase):
             score_ = model_load.score(X=X_, y=y_)
             predict_ = model_load.predict(X=X_)
 
+            if self.y_data_transformer != None:
+                try:
+                    y_ = self.y_data_transformer.inverse_transform(y_)
+                    predict_ = self.y_data_transformer.inverse_transform(predict_)
+                except ValueError:
+                    y_ = self.y_data_transformer.inverse_transform(np.array(y_).reshape(-1,1))
+                    predict_ = self.y_data_transformer.inverse_transform(np.array(predict_).reshape(-1,1))
+                    y_ = np.concatenate(y_).ravel().tolist()
+                    predict_ = np.concatenate(predict_).ravel().tolist()
+                except Exception as e:
+                    where_exception(error_msg=e)
+
             if isinstance(predict_[0], numbers.Integral):
-                result_response = {"score": "%.3f" % score_, "predict": predict_}
+                result_response = {"score": "%.3f" % score_, "predict": predict_, "real_value": y_}
                 return result_response
             else:
-                result_response = ["%.3f" % elem for elem in predict_]
-                result_response = {"score": "%.3f" % score_, "predict": result_response}
+                # result_response = ["%.3f" % elem for elem in predict_]
+                result_response = {"score": "%.3f" % score_, "predict": predict_, "real_value": y_}
                 return result_response
         except Exception as e:
             where_exception(error_msg=e)

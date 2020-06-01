@@ -29,9 +29,9 @@ def transformer_fit(self, data_saved_path=None, pfunction_info=None, pk=None):
     logger.info(f"요청 ID [{pk}]의 전처리 작업이 진행중입니다")
 
     try:
-        get_result = PreprocessTask()
+        get_result = PreprocessTask(pk=pk)
         back_job = get_result.task_result(
-            data_path=data_saved_path, request_info=pfunction_info, pk=pk
+            data_path=data_saved_path, request_info=pfunction_info
         )
 
         Pdata_info = PreprocessedData.objects.get(pk=pk)

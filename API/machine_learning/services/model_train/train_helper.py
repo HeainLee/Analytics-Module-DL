@@ -489,7 +489,7 @@ class MachineLearningTask(PrepareModelTrain):
                 self._train_lightgbm_model(
                     estimator=clf, 
                     data_set=data, 
-                    train_columns=train_param['X'],
+                    train_columns=train_param["X"],
                     target_column=train_param["y"]
             )
 
@@ -521,8 +521,8 @@ class MachineLearningTask(PrepareModelTrain):
                     self._train_sklearn_model(
                         estimator=clf, 
                         data_set=data, 
-                        train_columns= train_param['X'],
-                        target_column=train_param['y']
+                        train_columns= train_param["X"],
+                        target_column=train_param["y"]
                     )
 
                 saved_name = "M_{}.pickle".format(pk)
