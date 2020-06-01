@@ -3,6 +3,7 @@ from __future__ import absolute_import
 import os
 import django
 import psutil
+import platform
 from celery import Celery
 from datetime import timedelta
 from django.apps import apps
@@ -11,38 +12,43 @@ from celery.schedules import crontab
 
 # Django의 세팅 모듈을 Celery의 기본으로 사용하도록 등록합니다.
 
-# process = psutil.Process(pid)
-
-
 def checkIfProcessRunning(processName):
-    #Iterate over the all the running process 
-    for proc in psutil.process_iter(attrs=["cmdline", "name"]):
-        cmdline = proc.info['cmdline']
-        if cmdline is not None:
-            if processName in cmdline:
-                return cmdline
+    if platform.system() == 'Linux':
+        #Iterate over the all the running process 
+        for proc in psutil.process_iter(attrs=["cmdline", "name"]):
+            cmdline = proc.info['cmdline']
+            if cmdline is not None:
+                if processName in cmdline and '0.0.0.0:8002' in cmdline:
+                    return cmdline
+    else:
+        for proc in psutil.process_iter(attrs=["cmdline", "name"]):
+            cmdline = proc.info['cmdline']
+            if cmdline is not None:
+                if processName in cmdline:
+                    return cmdline
 
 check_version = checkIfProcessRunning('manage.py')
+filename = os.path.basename(__file__)
 
 if check_version:
-    print(' ')
-    for cmd in check_version:
-        
-        if 'production' in cmd:
-            os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dasolution.production')
-            print('장고 환경을 "배포(production.py)" 버전으로 실행했습니다.')
-        elif 'settings' in cmd:
-            os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dasolution.settings')
-            print('장고 환경을 "로컬(settings.py)" 버전으로 실행했습니다.')
+    print('')
+    print(f'[{filename}]  장고 celery.py 실행')
+    full_cmd = ' '.join(check_version)
+    if 'production' in full_cmd:
+        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dasolution.production')
+        print(f'[{filename}]  장고 환경을 "배포(production.py)" 버전으로 실행했습니다.')
+    elif 'settings' in full_cmd:
+        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dasolution.settings')
+        print(f'[{filename}]  장고 환경을 "로컬(settings.py)" 버전으로 실행했습니다.')
+    else:
+        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dasolution.settings')
+        print(f'[{filename}]  장고 환경을 명시하지 않았습니다. "로컬(settings.py)" 버전의 환경을 임포트합니다.')
 else:
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dasolution.settings')
-    print('\n manage.py 명령어가 실행되지 않았습니다. "로컬(settings.py)" 버전의 환경을 임포트합니다.')
+    print(f'[{filename}]  manage.py 명령어가 실행되지 않았습니다. "로컬(settings.py)" 버전의 환경을 임포트합니다.')
 
 # os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dasolution.settings')
 # os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dasolution.production')
-
-from django.conf import settings  # noqa
-
 
 app = Celery('dasolution', 
     backend="amqp", #결과를 보기 위해 backend 설정 필요 

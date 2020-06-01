@@ -3,11 +3,11 @@
 
 1.  **API 목록**
 
-    1-1.  **API URI 맵**             
+    - 메인 URL 패턴 :  /analyticsModule
+        - 머신러닝 관리: /analyticsModule/ml
+        - 딥러닝 관리 : /analyticsModule/dl
 
-- 메인 URL 패턴 :  /analyticsModule
-    - 머신러닝 관리: /analyticsModule/ml
-    - 딥러닝 관리 : /analyticsModule/dl
+    - API URI 맵 
 
 |**순번**| **메인 URL** | **기능구분**  | **HTTP Method** | **URI**                                              | **Header**           | **설명**                      |
 |----|---------------------|--------------|-------------|--------------------------------------------------|------------------|---------------------------|
@@ -45,6 +45,7 @@
 | 32 | /analyticsModule/dl |                    | GET         | /model/{id}                                      | application/json | 모델 개별 조회 [학습 비동기 처리 업데이트] |
 | 33 | /analyticsModule/dl |                    | DELETE      | /model/{id}                                      | application/json | 모델 삭제                     |
 | 34 | /analyticsModule/dl |                    | GET         | /model/{id}/download?type=                       | octet-stream     | 모델 다운로드 [네트워크&가중치]        |
+
 2.  **API 명세**
 
 > [데이터 분석 시스템 분석모듈 API 세부 명세](https://documenter.getpostman.com/view/9242058/SzKWtcRF?version=latest)
